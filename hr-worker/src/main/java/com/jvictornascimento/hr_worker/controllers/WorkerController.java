@@ -1,11 +1,12 @@
 package com.jvictornascimento.hr_worker.controllers;
 
 import com.jvictornascimento.hr_worker.models.Worker;
-import com.jvictornascimento.hr_worker.repositories.WorkerRepository;
+
 import com.jvictornascimento.hr_worker.services.WorkerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,9 @@ public class WorkerController {
 
     private static Logger logger = LoggerFactory.getLogger(WorkerController.class);
 
+    @Value("${test.config: valor padrao}")
+    private String testConfig;
+
     @Autowired
     private Environment env;
 
@@ -36,5 +40,10 @@ public class WorkerController {
     public ResponseEntity<Worker> findById(@PathVariable  long id){
         logger.info("Port: " + env.getProperty("local.server.port"));
         return ResponseEntity.status(HttpStatus.OK).body(service.getOne(id));
+    }
+    @GetMapping(value = "/config")
+    public ResponseEntity<Void> getConfig(){
+        logger.info("CONFIG: " + testConfig);
+        return ResponseEntity.noContent().build();
     }
 }
